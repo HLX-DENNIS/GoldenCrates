@@ -9,11 +9,7 @@ import su.nexmedia.engine.commands.api.IGeneralCommand;
 import su.nexmedia.engine.config.api.JYML;
 import su.nexmedia.engine.hooks.Hooks;
 import su.nexmedia.engine.hooks.external.citizens.CitizensHK;
-import su.nightexpress.goldencrates.commands.DropCommand;
-import su.nightexpress.goldencrates.commands.GiveCommand;
-import su.nightexpress.goldencrates.commands.GivekeyCommand;
-import su.nightexpress.goldencrates.commands.KeysCommand;
-import su.nightexpress.goldencrates.commands.MenuCommand;
+import su.nightexpress.goldencrates.commands.*;
 import su.nightexpress.goldencrates.config.Config;
 import su.nightexpress.goldencrates.config.Lang;
 import su.nightexpress.goldencrates.data.CrateUser;
@@ -143,6 +139,10 @@ public class GoldenCrates extends NexDataPlugin<GoldenCrates, CrateUser> {
 		mainCommand.addSubCommand(new GivekeyCommand(this));
 		mainCommand.addSubCommand(new MenuCommand(this));
 		mainCommand.addSubCommand(new KeysCommand(this));
+		mainCommand.addSubCommand(new OpenCommand(this));
+		mainCommand.addSubCommand(new PreviewCommand(this));
+		mainCommand.addSubCommand(new RemovekeyCommand(this));
+		mainCommand.addSubCommand(new SetkeysCommand(this));
 	}
     
     @Override

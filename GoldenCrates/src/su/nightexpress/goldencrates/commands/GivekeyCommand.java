@@ -75,11 +75,11 @@ public class GivekeyCommand extends ISubCommand<GoldenCrates> {
 		if (pName.equalsIgnoreCase(JStrings.MASK_ANY)) {
 			for (Player player : plugin.getServer().getOnlinePlayers()) {
 				if (player == null) continue;
-				plugin.getKeyManager().giveKey(player, crateKey, amount);
+				plugin.getKeyManager().giveKey(player, crateKey, amount, true);
 			}
 		}
 		else {
-			if (!plugin.getKeyManager().giveKey(pName, crateKey, amount)) {
+			if (!plugin.getKeyManager().giveKey(pName, crateKey, amount, true)) {
 				plugin.lang().Error_NoData.replace("%player%", pName).send(sender);
 				return;
 			}

@@ -471,7 +471,7 @@ public class CrateTemplate extends LoadableItem implements Cleanable {
 			    
 			    CrateKey crateKey = plugin.getKeyManager().getKeyByCrate(this.crate);
 			    if (crateKey != null) {
-			    	plugin.getKeyManager().giveKey(player, crateKey, 1);
+			    	plugin.getKeyManager().giveKey(player, crateKey, 1, true);
 			    }
 	    		return;
 	    	}

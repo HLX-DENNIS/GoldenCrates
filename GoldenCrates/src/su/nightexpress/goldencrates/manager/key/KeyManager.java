@@ -180,21 +180,21 @@ public class KeyManager extends IManager<GoldenCrates> {
 			CrateKey crateKey = this.getKeyById(keyId);
 			if (crateKey == null) continue;
 			
-			this.giveKey(player, crateKey, amount);
+			this.giveKey(player, crateKey, amount, true);
 		}
 		this.cfgKeysTemp.remove(player.getName());
 		this.cfgKeysTemp.saveChanges();
 	}
 
-	public boolean giveKey(@NotNull String pName, @NotNull Crate crate, int amount) {
+	public boolean giveKey(@NotNull String pName, @NotNull Crate crate, int amount, boolean notify) {
 		CrateKey key = this.getKeyByCrate(crate);
-		return key == null ? false : this.giveKey(pName, key, amount);
+		return key == null ? false : this.giveKey(pName, key, amount, notify);
 	}
 	
-	public boolean giveKey(@NotNull String pName, @NotNull CrateKey key, int amount) {
+	public boolean giveKey(@NotNull String pName, @NotNull CrateKey key, int amount, boolean notify) {
 		Player player = plugin.getServer().getPlayer(pName);
 		if (player != null) {
-			return this.giveKey(player, key, amount);
+			return this.giveKey(player, key, amount, notify);
 		}
 		
 		// Store key for offline player to give it later.
@@ -209,12 +209,12 @@ public class KeyManager extends IManager<GoldenCrates> {
 		return false;
 	}
 	
-	public boolean giveKey(@NotNull Player player, @NotNull Crate crate, int amount) {
+	public boolean giveKey(@NotNull Player player, @NotNull Crate crate, int amount, boolean notify) {
 		CrateKey key = this.getKeyByCrate(crate);
-		return key == null ? false : this.giveKey(player, key, amount);
+		return key == null ? false : this.giveKey(player, key, amount, notify);
 	}
 	
-	public boolean giveKey(@NotNull Player player, @NotNull CrateKey key, int amount) {
+	public boolean giveKey(@NotNull Player player, @NotNull CrateKey key, int amount, boolean notify) {
 		if (key.isVirtual()) {
 			CrateUser user = plugin.getUserManager().getOrLoadUser(player);
 			if (user == null) return false;
@@ -235,38 +235,105 @@ public class KeyManager extends IManager<GoldenCrates> {
 				ItemUT.addItem(player, keyItem);
 			}
 		}
-		
-		plugin.lang().Command_GiveKey_Notify
+		if(notify)
+			plugin.lang().Command_GiveKey_Notify
 				.replace("%amount%", amount)
 				.replace("%key%", key.getName())
 				.send(player);
 		return true;
 	}
 	
-	public boolean takeKey(@NotNull Player player, @NotNull Crate crate) {
+	public boolean takeKey(String pName, @NotNull Crate crate) {
 		CrateKey key = this.getKeyByCrate(crate);
-		return key != null ? this.takeKey(player, key) : false;
+		return key != null ? this.takeKey(pName, key) : false;
+	}
+
+	public boolean takeKey(String pName, @NotNull CrateKey crateKey) {
+		return takeKey(pName, crateKey, 1);
 	}
 	
-	public boolean takeKey(@NotNull Player player, @NotNull CrateKey crateKey) {
-		if (crateKey.isVirtual()) {
-			CrateUser user = plugin.getUserManager().getOrLoadUser(player);
-			if (user == null || user.getKeys(crateKey.getId()) < 1) return false;
-			
-			user.takeKeys(crateKey.getId(), 1);
-			
-			if (plugin.cfg().dataSaveInstant) {
-				plugin.getUserManager().save(user, true);
+	public boolean takeKey(String pName, @NotNull CrateKey crateKey, @Nullable Integer amount) {
+		if(amount == null)
+			amount = 1;
+
+
+		Player player = plugin.getServer().getPlayer(pName);
+		if(player != null) {
+
+			if (crateKey.isVirtual()) {
+				CrateUser user = plugin.getUserManager().getOrLoadUser(player);
+				if (user == null || user.getKeys(crateKey.getId()) < amount) return false;
+
+				user.takeKeys(crateKey.getId(), amount);
+
+				if (plugin.cfg().dataSaveInstant) {
+					plugin.getUserManager().save(user, true);
+				}
+
+				return true;
 			}
-			
+
+			ItemStack keyStack = this.getFirstKeyStack(player, crateKey);
+			if (keyStack == null) return false;
+
+			keyStack.setAmount(keyStack.getAmount() - 1);
 			return true;
 		}
-		
-		ItemStack keyStack = this.getFirstKeyStack(player, crateKey);
-		if (keyStack == null) return false;
-		
-		keyStack.setAmount(keyStack.getAmount() - 1);
-		return true;
+
+		if (plugin.getData().isUserExists(pName, false)) {
+			String path = pName + "." + crateKey.getId();
+			int stored = this.cfgKeysTemp.getInt(path, 0) - amount;
+			this.cfgKeysTemp.set(path, stored);
+			this.cfgKeysTemp.saveChanges();
+			return true;
+		}
+
+		return false;
+	}
+
+	public boolean setKeys(String pName, @NotNull CrateKey crateKey, @NotNull int amount) {
+
+		Player player = plugin.getServer().getPlayer(pName);
+		if(player != null) {
+			if (crateKey.isVirtual()) {
+				CrateUser user = plugin.getUserManager().getOrLoadUser(player);
+				if (user == null)
+					return false;
+				user.takeKeys(crateKey.getId(), user.getKeys(crateKey.getId())); // zero the user's key count for this key type
+				giveKey(player, crateKey, amount, false);
+				if (plugin.cfg().dataSaveInstant) {
+					plugin.getUserManager().save(user, true);
+				}
+				return true;
+			} else {
+				boolean removedKeys = false;
+				ItemStack keyStack = null;
+				while ((keyStack = this.getFirstKeyStack(player, crateKey)) != null) {
+					keyStack.setAmount(0);
+				} // null out all the keys of this type
+
+				giveKey(player, crateKey, amount, false);// give the correct amount
+				return true;
+			}
+		}
+		if(!crateKey.isVirtual())
+			return false; // you can remove keys from someone, or add keys to someone, but can't know how many
+							// they currently have if they're not online and it's not virtual.
+		if (plugin.getData().isUserExists(pName, false)) {
+			String path = pName + "." + crateKey.getId();
+			CrateUser user = plugin.getUserManager().getOrLoadUser(pName, false);
+			int stored = user.getKeys(crateKey.getId());
+			if(stored < amount)
+			{
+				stored = amount - stored; // give them the difference up
+			} else if (stored > amount) {
+				stored = (stored - amount) * -1; // remove the difference
+			}
+			this.cfgKeysTemp.set(path, stored);
+			this.cfgKeysTemp.saveChanges();
+			return true;
+		}
+		return false;
 	}
 	
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)

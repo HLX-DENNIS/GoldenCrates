@@ -21,7 +21,17 @@ public class Lang extends CoreLang {
 	public ILangMsg Command_Give_Usage = new ILangMsg(this, "<player | *> <crate> [amount]");
 	public ILangMsg Command_Give_Desc = new ILangMsg(this, "Gives crate(s) to a player.");
 	public ILangMsg Command_Give_Done = new ILangMsg(this, "Given &ax%amount% %crate% &7crate(s) to &a%player%");
-	public ILangMsg Command_Give_Notify = new ILangMsg(this, "You recieved &ax%amount% &a%crate%");
+	public ILangMsg Command_Give_Notify = new ILangMsg(this, "You received &ax%amount% &a%crate%");
+
+	public ILangMsg Command_Open_Usage = new ILangMsg(this, "<crate>");
+	public ILangMsg Command_Open_Desc = new ILangMsg(this, "Opens one crate immediately, provided the player has a key.");
+	public ILangMsg Command_Open_Done = new ILangMsg(this, "Opened &aone %crate% &7crate(s)");
+	public ILangMsg Command_Open_Notify = new ILangMsg(this, "You opened &aone &a%crate%");
+
+	public ILangMsg Command_Preview_Usage = new ILangMsg(this, "<crate>");
+	public ILangMsg Command_Preview_Desc = new ILangMsg(this, "Previews one crate immediately, provided the player has a key.");
+	public ILangMsg Command_Preview_Done = new ILangMsg(this, "Previewed &a%crate% &7");
+	public ILangMsg Command_Preview_Notify = new ILangMsg(this, "You Previewed &a%crate%");
 	
 	public ILangMsg Command_Drop_Usage = new ILangMsg(this, "<crate> <world> <x> <y> <z>");
 	public ILangMsg Command_Drop_Desc = new ILangMsg(this, "Drop crate at specified location.");
@@ -30,8 +40,19 @@ public class Lang extends CoreLang {
 	public ILangMsg Command_GiveKey_Usage = new ILangMsg(this, "<player | *> <crate> [amount]");
 	public ILangMsg Command_GiveKey_Desc = new ILangMsg(this, "Gives crate key(s) to a player.");
 	public ILangMsg Command_GiveKey_Done = new ILangMsg(this, "Given &ax%amount% &a%key% &7key(s) to &a%player%");
-	public ILangMsg Command_GiveKey_Notify = new ILangMsg(this, "You recieved &ax%amount% %key% &7key(s)!");
+	public ILangMsg Command_GiveKey_Notify = new ILangMsg(this, "You received &ax%amount% %key% &7key(s)!");
 	public ILangMsg Command_GiveKey_Error_NoKey = new ILangMsg(this, "&cInvalid key!");
+
+	public ILangMsg Command_SetKeys_Usage = new ILangMsg(this, "<player> <crate> [amount]");
+	public ILangMsg Command_SetKeys_Desc = new ILangMsg(this, "Sets the amount of keys for a specific crate that a player has.");
+	public ILangMsg Command_SetKeys_Done = new ILangMsg(this, "Set &a%key% amount for &a%player% to &ax%amount%");
+	public ILangMsg Command_SetKeys_Error_NoKey = new ILangMsg(this, "&cInvalid key!");
+
+	public ILangMsg Command_RemoveKey_Usage = new ILangMsg(this, "<player | *> <crate> [amount]");
+	public ILangMsg Command_RemoveKey_Desc = new ILangMsg(this, "Removes crate key(s) from a player.");
+	public ILangMsg Command_RemoveKey_Done = new ILangMsg(this, "Removed &ax%amount% &a%key% &7key(s) from &a%player%");
+	public ILangMsg Command_RemoveKey_Notify = new ILangMsg(this, "&ax%amount% %key% &7key(s) were taken from you.");
+	public ILangMsg Command_RemoveKey_Error_NoKey = new ILangMsg(this, "&cInvalid key!");
 	
 	public ILangMsg Command_CheckKey_Desc = new ILangMsg(this, "Show amount of player keys.");
 	public ILangMsg Command_CheckKey_Usage = new ILangMsg(this, "[player]");
@@ -77,6 +98,6 @@ public class Lang extends CoreLang {
 	public ILangMsg Editor_Error_Key_Exists = new ILangMsg(this, "Key with such id is already exists!");
 	public ILangMsg Editor_Error_Template = new ILangMsg(this, "No such template!");
 	public ILangMsg Editor_Error_Menu = new ILangMsg(this, "No such menu!");
-	
+	public ILangMsg Error_SetKeys_NoMaskAny = new ILangMsg(this, "Cannot override key amounts for all players at once.");
 	public ILangMsg Menu_Invalid = new ILangMsg(this, "Invalid menu: &c'%menu%'&7!");
 }
