@@ -3,7 +3,7 @@ package su.nightexpress.goldencrates.manager.key;
 import java.util.Arrays;
 
 import org.bukkit.Material;
-import org.apache.commons.lang3.text.WordUtils;
+import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 

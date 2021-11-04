@@ -1,5 +1,4 @@
 *.class
 *.lock
 *.bin
-*.jar
 build

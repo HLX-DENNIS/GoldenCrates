@@ -1,10 +1,10 @@
-
 plugins {
     // Apply the java-library plugin for API and implementation separation.
     id 'java-library'
-    id 'com.github.johnrengelman.shadow' version '7.0.0'
+//    id 'com.github.johnrengelman.shadow' version '7.1.0'
     id 'java'
 }
+
 
 repositories {
     // Use Maven Central for resolving dependencies.
@@ -36,10 +36,19 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation files('libs/nexengine_2.0.7.jar')
     implementation files('libs/HolographicDisplays-2.4.9.jar')
+    implementation files('libs/Paper-Server-1.17.1-R0.1-SNAPSHOT-mojang-mapped.jar')
     implementation 'net.citizensnpcs:citizens-main:2.0.28-SNAPSHOT'
     implementation 'me.clip:placeholderapi:2.10.10'
 }
 
+
+//shadowJar {
+//    relocate 'org.apache.commons.lang3', 'org.bukkit.craftbukkit.libs.org.apache.commons.lang3'
+//}
+
+//tasks.named("compileJava") { dependsOn(tasks.named("shadowJar")) }
+//assemble.dependsOn shadowJar
+//project.tasks.shadowJar.dependsOn build
 sourceSets {
     main {
         java {
@@ -54,10 +63,4 @@ sourceSets {
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
-
-shadowJar {
-    relocate 'org.apache.commons.lang3', 'org.bukkit.craftbukkit.libs.org.apache.commons.lang3'
-}
-
-
-assemble.dependsOn shadowJar
+//assemble.dependsOn shadowJar
