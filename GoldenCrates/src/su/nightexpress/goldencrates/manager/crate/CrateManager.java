@@ -360,7 +360,7 @@ public class CrateManager extends IManager<GoldenCrates> {
 		}
 		
 		if (crateKey != null) {
-			this.plugin.getKeyManager().takeKey(player, crateKey);
+			this.plugin.getKeyManager().takeKey(player.getName(), crateKey);
 		}
 		if (item != null) {
 			item.setAmount(item.getAmount()  -1);

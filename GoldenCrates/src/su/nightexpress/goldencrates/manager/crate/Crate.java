@@ -91,7 +91,7 @@ public class Crate extends LoadableItem implements Cleanable, Editable {
 		this.setRewardBroadcast(true);
 		this.setMinRewards(1);
 		this.setMaxRewards(3);
-		this.setRewards(new LinkedHashMap<>());
+		this.setRewardsMap(new LinkedHashMap<>());
 	}
 	
 	public Crate(@NotNull GoldenCrates plugin, @NotNull JYML cfg) {
@@ -436,11 +436,11 @@ public class Crate extends LoadableItem implements Cleanable, Editable {
 	}
 	
 	public void setRewards(@NotNull List<CrateReward> rewards) {
-		this.setRewards(rewards.stream().collect(
+		this.setRewardsMap(rewards.stream().collect(
 				Collectors.toMap(CrateReward::getId, Function.identity(), (has, add) -> add, LinkedHashMap::new)));
 	}
 	
-	public void setRewards(@NotNull LinkedHashMap<String, CrateReward> rewards) {
+	public void setRewardsMap(@NotNull LinkedHashMap<String, CrateReward> rewards) {
 		this.rewardMap = rewards;
 	}
 	

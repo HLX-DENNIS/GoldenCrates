@@ -6,6 +6,9 @@ public class Perms {
 	
 	public static final String ADMIN = 						PREFIX + "admin";
 	public static final String USER = 						PREFIX + "user";
+
+	public static final String VIRTUALOPEN = 				PREFIX + "virtualopen";
+	public static final String PREVIEW = 					PREFIX + "preview";
 	
 	public static final String CMD_KEYS = 					PREFIX + "cmd.keys";
 	public static final String CMD_KEYS_OTHERS = 			CMD_KEYS + ".others";
